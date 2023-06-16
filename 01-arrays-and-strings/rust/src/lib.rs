@@ -26,8 +26,25 @@ pub fn is_unique(s: &str) -> bool {
     true
 }
 
+// no extra data structures
+// assume from 'a' to 'z'
+pub fn is_unique_bit(s: &str) -> bool {
+    let mut checker = 0;
+    for ch in s.chars() {
+        let val = ch as i32 - 'a' as i32;
+        if checker & (1 << val) > 0 {
+            return false;
+        }
+        checker |= 1 << val;
+    }
+    true
+}
+
 #[test]
 fn test_is_unique() {
     assert!(!is_unique("aabb"));
     assert!(is_unique("asdf"));
+
+    assert!(!is_unique_bit("aabb"));
+    assert!(is_unique_bit("asdf"));
 }
