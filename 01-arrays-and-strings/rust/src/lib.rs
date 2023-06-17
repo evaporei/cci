@@ -48,3 +48,35 @@ fn test_is_unique() {
     assert!(!is_unique_bit("aabb"));
     assert!(is_unique_bit("asdf"));
 }
+
+// 1.2 Check Permutation: Given two strings, write a method to decide if one is a permutation of the
+// other.
+// Hints: #7, #84, #722, #737
+//
+// time complexity:
+// a = b = n
+// O(n + log n)
+// or just O(n)?
+pub fn check_permutation(a: &str, b: &str) -> bool {
+    if a.len() != b.len() { // O(1)
+        return false;
+    }
+
+    let mut chars_a = a.chars().collect::<Vec<char>>(); // O(a)
+    chars_a.sort_by(|c1, c2| c1.cmp(c2)); // O(log a)
+    let sorted_a: String = chars_a.into_iter().collect(); // O(a) -> doesn't count
+
+    let mut chars_b = b.chars().collect::<Vec<char>>(); // O(b)
+    chars_b.sort_by(|c1, c2| c1.cmp(c2)); // O(log b)
+    let sorted_b: String = chars_b.into_iter().collect(); // O(b) -> doesn't count
+
+    sorted_a == sorted_b // O(n) -> doesn't count
+}
+
+#[test]
+fn test_check_permutation() {
+    assert!(check_permutation("abc", "cab"));
+    assert!(!check_permutation("abc", "zef"));
+    assert!(!check_permutation("abc", "abj"));
+    assert!(!check_permutation("abcd", "abc"));
+}
