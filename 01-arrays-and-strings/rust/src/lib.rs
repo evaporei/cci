@@ -116,3 +116,74 @@ fn test_check_permutation() {
     assert!(!check_permutation_char_count("abc", "abj"));
     assert!(!check_permutation_char_count("abcd", "abc"));
 }
+
+// URLify: Write a method to replace all spaces in a string with '%20'. You may assume that the string
+// has sufficient space at the end to hold the additional characters, and that you are given the "true"
+// length of the string. (Note: If implementing in Java, please use a character array so that you can
+// perform this operation in place.)
+// EXAMPLE
+// Input: "Mr John Smith ", 13
+// Output: "Mr%20John%20Smith"
+// Hints: #53, #118
+//
+// time complexity:
+// O(n)
+pub fn urlify(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+
+    for ch in s.chars() {
+        if ch == ' ' {
+            out.push_str("%20");
+        } else {
+            out.push(ch);
+        }
+    }
+
+    out
+}
+
+pub fn urlify_in_place(s: &mut Vec<u8>, true_len: usize) {
+    let mut space_count = 0;
+    for ch in s.iter() {
+        if *ch == b' ' {
+            space_count += 1;
+        }
+    }
+
+    let mut index = true_len + space_count * 2;
+    // // set true end character as \0 in trash languages
+    // s[true_len] = '\0';
+    let mut i = true_len as isize - 1;
+    while i >= 0 {
+        if s[i as usize] == b' ' {
+            s[index - 1] = b'0';
+            s[index - 2] = b'2';
+            s[index - 3] = b'%';
+            index -= 3;
+        } else {
+            s[index - i as usize] = s[i as usize];
+            index -= 1;
+        }
+        i -= 1;
+    }
+}
+
+#[test]
+fn test_urlify() {
+    assert_eq!(urlify("Mr John Smith "), "Mr%20John%20Smith%20");
+    assert_eq!(urlify("MrJohnSmith"), "MrJohnSmith");
+
+    // use std::io::Write;
+    //
+    // let mut w_space: Vec<u8> = Vec::with_capacity(14 + 6);
+    // w_space.write(b"Mr John Smith ").unwrap();
+    // let true_len = w_space.len();
+    // urlify_in_place(&mut w_space, true_len);
+    // assert_eq!(w_space, b"MrJohnSmith");
+    //
+    // let mut wout_space: Vec<u8> = Vec::with_capacity(11);
+    // wout_space.write(b"MrJohnSmith").unwrap();
+    // let true_len = wout_space.len();
+    // urlify_in_place(&mut wout_space, true_len);
+    // assert_eq!(wout_space, b"MrJohnSmith");
+}
