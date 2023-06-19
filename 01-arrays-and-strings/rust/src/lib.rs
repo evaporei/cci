@@ -187,3 +187,43 @@ fn test_urlify() {
     // urlify_in_place(&mut wout_space, true_len);
     // assert_eq!(wout_space, b"MrJohnSmith");
 }
+
+// Palindrome Permutation: Given a string, write a function to check if it is a permutation of a palindrome.
+// A palindrome is a word or phrase that is the same forwards and backwards.
+// A permutation is a rearrangement of letters.
+// The palindrome does not need to be limited to just dictionary words.
+// EXAMPLE
+// Input: Tact Coa
+// Output: True (permutations: "taco cat", "atco eta", etc.)
+// Hints: #106, #121, #134, #136
+//
+// time complexity:
+// O(n)
+pub fn palindrome_perm(s: &str) -> bool {
+    let mut table = HashMap::new();
+
+    for ch in s.chars().filter(|ch| ch.is_alphanumeric()).map(|ch| ch.to_ascii_lowercase()) {
+        table.entry(ch)
+            .and_modify(|count| *count += 1)
+            .or_insert(1);
+    }
+
+    let mut found_odd = false;
+
+    // I find this slightly disgusting
+    for count in table.values() {
+        if count % 2 == 1 {
+            if found_odd {
+                return false;
+            }
+            found_odd = true;
+        }
+    }
+
+    found_odd
+}
+
+#[test]
+fn test_palindrome_perm() {
+    assert!(palindrome_perm("Tact Coa"));
+}
