@@ -242,8 +242,25 @@ pub fn palindrome_perm2(s: &str) -> bool {
     odd_count <= 1
 }
 
+pub fn palindrome_perm3(s: &str) -> bool {
+    let mut bit_vector = 0;
+
+    for index in s.chars().filter(|ch| ch.is_alphanumeric()).map(|ch| ch.to_ascii_lowercase()).map(|ch| ch as u32) {
+        if let Some(mask) = 1i32.checked_shl(index) {
+            if bit_vector & mask == 0 {
+                bit_vector |= mask;
+            } else {
+                bit_vector &= mask;
+            }
+        }
+    }
+
+    bit_vector == 0 || bit_vector & (bit_vector - 1) == 0
+}
+
 #[test]
 fn test_palindrome_perm() {
     assert!(palindrome_perm("Tact Coa"));
     assert!(palindrome_perm2("Tact Coa"));
+    assert!(palindrome_perm3("Tact Coa"));
 }
