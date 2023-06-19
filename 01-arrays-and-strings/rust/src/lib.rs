@@ -223,7 +223,27 @@ pub fn palindrome_perm(s: &str) -> bool {
     found_odd
 }
 
+pub fn palindrome_perm2(s: &str) -> bool {
+    let mut table = HashMap::new();
+    let mut odd_count = 0;
+
+    for ch in s.chars().filter(|ch| ch.is_alphanumeric()).map(|ch| ch.to_ascii_lowercase()) {
+        table.entry(ch)
+            .and_modify(|count| *count += 1)
+            .or_insert(1);
+
+        if table.get(&ch).unwrap() % 2 == 1 {
+            odd_count += 1;
+        } else {
+            odd_count -= 1;
+        }
+    }
+
+    odd_count <= 1
+}
+
 #[test]
 fn test_palindrome_perm() {
     assert!(palindrome_perm("Tact Coa"));
+    assert!(palindrome_perm2("Tact Coa"));
 }
