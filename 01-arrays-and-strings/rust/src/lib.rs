@@ -320,6 +320,35 @@ fn one_edit_insert(s1: &str, s2: &str) -> bool {
     true
 }
 
+pub fn one_away_monolith(first: &str, second: &str) -> bool {
+    if first.len().abs_diff(second.len()) > 1 {
+        return false;
+    }
+
+    let s1 = if first.len() < second.len() { first } else { second };
+    let s2 = if first.len() < second.len() { second } else { first };
+
+    let mut idx1 = 0;
+    let mut idx2 = 0;
+    let mut found_diff = false;
+
+    while idx2 < s2.len() && idx1 < s1.len() {
+        if s1.chars().nth(idx1) != s2.chars().nth(idx2) {
+            if found_diff { return false; }
+            found_diff = true;
+
+            if s1.len() == s2.len() {
+                idx1 += 1;
+            }
+        } else {
+            idx1 += 1;
+        }
+        idx2 += 1;
+    }
+
+    true
+}
+
 #[test]
 fn test_one_away() {
     assert!(one_away("pale", "pale"));
@@ -327,4 +356,10 @@ fn test_one_away() {
     assert!(one_away("pales", "pale"));
     assert!(one_away("pale", "bale"));
     assert!(!one_away("pale", "bake"));
+
+    assert!(one_away_monolith("pale", "pale"));
+    assert!(one_away_monolith("pale", "ple"));
+    assert!(one_away_monolith("pales", "pale"));
+    assert!(one_away_monolith("pale", "bale"));
+    assert!(!one_away_monolith("pale", "bake"));
 }
