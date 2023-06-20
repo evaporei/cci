@@ -363,3 +363,45 @@ fn test_one_away() {
     assert!(one_away_monolith("pale", "bale"));
     assert!(!one_away_monolith("pale", "bake"));
 }
+
+// 1.6 String Compression: Implement a method to perform basic string compression using the counts
+// of repeated characters. For example, the string aabcccccaaa would become a2bc5a3. If the
+// "compressed" string would not become smaller than the original string, your method should return
+// the original string. You can assume the string has only uppercase and lowercase letters (a - z).
+// Hints: #92, #110
+pub fn str_compression(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    let mut last_char = None;
+    let mut char_count = 2;
+    let mut idx_first = 0;
+
+    for ch in s.chars() {
+        if last_char == Some(ch) {
+            if char_count == 2 {
+                out.push('2');
+                idx_first = out.len() - 1;
+            } else {
+                out.truncate(idx_first);
+                out.push_str(&char_count.to_string());
+            }
+
+            char_count += 1;
+        } else {
+            out.push(ch);
+            char_count = 2;
+        }
+        last_char = Some(ch);
+    }
+
+    out
+}
+
+#[test]
+fn test_str_compr() {
+    assert_eq!(str_compression("aaaaabcccccdeeef"), "a5bc5de3f");
+    assert_eq!(str_compression("aaabbbcccddd"), "a3b3c3d3");
+    assert_eq!(str_compression("aabbbbcdddd"), "a2b4cd4");
+    assert_eq!(str_compression("aabcccccaaa"), "a2bc5a3");
+    assert_eq!(str_compression("abccddefg"), "abc2d2efg");
+    assert_eq!(str_compression("abcdefg"), "abcdefg");
+}
