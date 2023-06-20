@@ -264,3 +264,67 @@ fn test_palindrome_perm() {
     assert!(palindrome_perm2("Tact Coa"));
     assert!(palindrome_perm3("Tact Coa"));
 }
+
+// 1.5 One Away: There are three types of edits that can be performed on strings: insert a character,
+// remove a character, or replace a character. Given two strings, write a function to check if they are
+// one edit (or zero edits) away.
+// EXAMPLE
+// pale, ple -> true
+// pales, pale -> true
+// pale, bale -> true
+// pale, bake -> false
+// Hints:#23, #97, #130
+//
+// time complexity: O(n); where n is the len of shortest string
+pub fn one_away(s: &str, edited: &str) -> bool {
+    if s.len() == edited.len() {
+        one_edit_replace(s, edited)
+    } else if s.len() + 1 == edited.len() {
+        one_edit_insert(s, edited)
+    } else if s.len() - 1 == edited.len() {
+        one_edit_insert(edited, s)
+    } else {
+        false
+    }
+}
+
+fn one_edit_replace(s1: &str, s2: &str) -> bool {
+    let mut found_diff = false;
+    for (ch, edit_ch) in s1.chars().zip(s2.chars()) {
+        if ch != edit_ch {
+            if found_diff {
+                return false;
+            }
+            found_diff = true;
+        }
+    }
+    true
+}
+
+fn one_edit_insert(s1: &str, s2: &str) -> bool {
+    let mut idx1 = 0;
+    let mut idx2 = 0;
+
+    while idx2 < s2.len() && idx1 < s1.len() {
+        if s1.chars().nth(idx1) != s2.chars().nth(idx2) {
+            if idx1 != idx2 {
+                return false;
+            }
+            idx2 += 1;
+        } else {
+            idx1 += 1;
+            idx2 += 1;
+        }
+    }
+
+    true
+}
+
+#[test]
+fn test_one_away() {
+    assert!(one_away("pale", "pale"));
+    assert!(one_away("pale", "ple"));
+    assert!(one_away("pales", "pale"));
+    assert!(one_away("pale", "bale"));
+    assert!(!one_away("pale", "bake"));
+}
