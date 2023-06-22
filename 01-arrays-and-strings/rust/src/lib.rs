@@ -419,6 +419,23 @@ pub fn str_compression_vec(chars: &mut Vec<char>) -> i32 {
     next_ch as i32
 }
 
+pub fn str_compr_bad(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    let mut count_consecutive = 0;
+
+    for i in 0..s.len() {
+        count_consecutive += 1;
+
+        if i + 1 >= s.len() || s.chars().nth(i) != s.chars().nth(i + 1) {
+            out.push(s.chars().nth(i).unwrap());
+            out.push_str(&count_consecutive.to_string());
+            count_consecutive = 0;
+        }
+    }
+
+    if out.len() < s.len() { out } else { s.to_owned() }
+}
+
 #[test]
 fn test_str_compr() {
     assert_eq!(str_compression("aaaaabcccccdeeef"), "a5bc5de3f");
@@ -435,4 +452,11 @@ fn test_str_compr() {
     let mut s = vec!['a','a','a'];
     str_compression_vec(&mut s);
     assert_eq!(s, vec!['a','3']);
+
+    assert_eq!(str_compr_bad("aaaaabcccccdeeef"), "a5b1c5d1e3f1");
+    assert_eq!(str_compr_bad("aaabbbcccddd"), "a3b3c3d3");
+    assert_eq!(str_compr_bad("aabbbbcdddd"), "a2b4c1d4");
+    assert_eq!(str_compr_bad("aabcccccaaa"), "a2b1c5a3");
+    assert_eq!(str_compr_bad("abccddefg"), "abccddefg");
+    assert_eq!(str_compr_bad("abcdefg"), "abcdefg");
 }
