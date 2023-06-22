@@ -396,6 +396,29 @@ pub fn str_compression(s: &str) -> String {
     out
 }
 
+pub fn str_compression_vec(chars: &mut Vec<char>) -> i32 {
+    let (mut next_ch, mut start_rep, n) = (0, 0, chars.len());
+
+    for end_rep in 1..=n {
+        if end_rep == n || chars[end_rep] != chars[start_rep] {
+            chars[next_ch] = chars[start_rep];
+            next_ch += 1;
+            let diff = end_rep - start_rep;
+            if diff > 1 {
+                for c in diff.to_string().chars() {
+                    chars[next_ch] = c;
+                    next_ch += 1;
+                }
+            }
+            start_rep = end_rep;
+        }
+    }
+
+    chars.truncate(next_ch);
+
+    next_ch as i32
+}
+
 #[test]
 fn test_str_compr() {
     assert_eq!(str_compression("aaaaabcccccdeeef"), "a5bc5de3f");
@@ -404,4 +427,12 @@ fn test_str_compr() {
     assert_eq!(str_compression("aabcccccaaa"), "a2bc5a3");
     assert_eq!(str_compression("abccddefg"), "abc2d2efg");
     assert_eq!(str_compression("abcdefg"), "abcdefg");
+
+    let mut s = vec!['a','a','b','b','c','c','c'];
+    str_compression_vec(&mut s);
+    assert_eq!(s, vec!['a','2','b','2','c','3']);
+
+    let mut s = vec!['a','a','a'];
+    str_compression_vec(&mut s);
+    assert_eq!(s, vec!['a','3']);
 }
