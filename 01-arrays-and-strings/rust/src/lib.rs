@@ -606,3 +606,25 @@ fn test_zero_matrix() {
     zero_matrix(&mut matrix);
     assert_eq!(matrix, vec![vec![0,0,0,0],vec![0,4,5,0],vec![0,3,1,0]]);
 }
+
+// 1.9 String Rotation: Assume you have a method isSubstring which checks if one word is a substring
+// of another. Given two strings, s1 and s2, write code to check if s2 is a rotation of s1 using only one
+// call to isSubstring (e.g., "waterbottle" is a rotation of "erbottlewat").
+// Hints: #34, #88, #704
+pub fn string_rotation(s1: &str, s2: &str) -> bool {
+    let len = s1.len();
+
+    if len == s2.len() && len > 0 {
+        let s1s1 = s1.to_owned() + s1;
+        return s1s1.contains(s2);
+    }
+
+    false
+}
+
+#[test]
+fn test_str_rotation() {
+    assert!(string_rotation("waterbottle", "erbottlewat"));
+    assert!(string_rotation("abcde", "cdeab"));
+    assert!(!string_rotation("abcde", "abced"));
+}
