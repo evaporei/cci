@@ -525,12 +525,10 @@ fn test_str_compr() {
 // time complexity: O(n²)
 pub fn rotate_matrix(m: &mut Vec<Vec<u32>>) {
     let n = m.len();
-    let mut layer = 0;
-    while layer < n / 2 {
+    for layer in 0..n / 2 {
         let first = layer;
         let last = n - 1 - layer;
-        let mut i = first;
-        while i < last {
+        for i in first..last {
             let offset = i - first;
             // save top
             let top = m[first][i];
@@ -542,10 +540,7 @@ pub fn rotate_matrix(m: &mut Vec<Vec<u32>>) {
             m[last][last - offset] = m[i][last];
             // top -> right
             m[i][last] = top;
-            i += 1;
         }
-
-        layer += 1;
     }
 }
 
