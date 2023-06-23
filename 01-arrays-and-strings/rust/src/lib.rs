@@ -505,3 +505,57 @@ fn test_str_compr() {
     assert_eq!(str_compr_w_count("abccddefg"), "abccddefg");
     assert_eq!(str_compr_w_count("abcdefg"), "abcdefg");
 }
+
+// 1.7 Rotate Matrix: Given an image represented by an NxN matrix, where each pixel in the image is 4
+// bytes, write a method to rotate the image by 90 degrees. Can you do this in place?
+// Hints: #51, #100
+// 
+// for i = 0 to n:
+//   temp = top[i]
+//   top[i] = left[i]
+//   left[i] = bottom[i]
+//   bottom[i] = right[i]
+//   right[i] = temp
+//
+//   xxxy    x goes to y
+//   w  y    y -> z
+//   w  y    z -> w
+//   wzzz    w -> x
+//
+// time complexity: O(n²)
+pub fn rotate_matrix(m: &mut Vec<Vec<u32>>) {
+    let n = m.len();
+    let mut layer = 0;
+    while layer < n / 2 {
+        let first = layer;
+        let last = n - 1 - layer;
+        let mut i = first;
+        while i < last {
+            let offset = i - first;
+            // save top
+            let top = m[first][i];
+            // left -> top
+            m[first][i] = m[last - offset][first];
+            // bottom -> left
+            m[last - offset][first] = m[last][last - offset];
+            // right -> bottom
+            m[last][last - offset] = m[i][last];
+            // top -> right
+            m[i][last] = top;
+            i += 1;
+        }
+
+        layer += 1;
+    }
+}
+
+#[test]
+fn test_rotate_matrix() {
+    let mut matrix = vec![vec![1,2,3],vec![4,5,6],vec![7,8,9]];
+    rotate_matrix(&mut matrix);
+    assert_eq!(matrix, vec![vec![7,4,1],vec![8,5,2],vec![9,6,3]]);
+
+    let mut matrix = vec![vec![5,1,9,11],vec![2,4,8,10],vec![13,3,6,7],vec![15,14,12,16]];
+    rotate_matrix(&mut matrix);
+    assert_eq!(matrix, vec![vec![15,13,2,5],vec![14,3,4,1],vec![12,6,8,9],vec![16,7,10,11]]);
+}
