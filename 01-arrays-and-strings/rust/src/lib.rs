@@ -622,9 +622,17 @@ pub fn string_rotation(s1: &str, s2: &str) -> bool {
     false
 }
 
+pub fn rotate_sick_n_slick(s1: &str, s2: &str) -> bool {
+    s1.len() == s2.len() && s2.repeat(2).contains(s1)
+}
+
 #[test]
 fn test_str_rotation() {
     assert!(string_rotation("waterbottle", "erbottlewat"));
     assert!(string_rotation("abcde", "cdeab"));
     assert!(!string_rotation("abcde", "abced"));
+
+    assert!(rotate_sick_n_slick("waterbottle", "erbottlewat"));
+    assert!(rotate_sick_n_slick("abcde", "cdeab"));
+    assert!(!rotate_sick_n_slick("abcde", "abced"));
 }
