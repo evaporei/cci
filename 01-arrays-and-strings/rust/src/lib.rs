@@ -554,3 +554,55 @@ fn test_rotate_matrix() {
     rotate_matrix(&mut matrix);
     assert_eq!(matrix, vec![vec![15,13,2,5],vec![14,3,4,1],vec![12,6,8,9],vec![16,7,10,11]]);
 }
+
+// 1.8 Zero Matrix: Write an algorithm such that if an element in an MxN matrix is 0, its entire row and
+// column are set to 0.
+// Hints: #17, #74, #702
+pub fn zero_matrix(m: &mut Vec<Vec<u32>>) {
+    let mut rows = vec![false; m.len()];
+    let mut columns = vec![false; m[0].len()];
+
+    for i in 0..m.len() {
+        for j in 0..m[i].len() {
+            if m[i][j] == 0 {
+                rows[i] = true;
+                columns[j] = true;
+            }
+        }
+    }
+
+    for i in 0..rows.len() {
+        if rows[i] {
+            nullify_row(m, i);
+        }
+    }
+
+    for j in 0..columns.len() {
+        if columns[j] {
+            nullify_column(m, j);
+        }
+    }
+}
+
+fn nullify_row(m: &mut Vec<Vec<u32>>, i: usize) {
+    for j in 0..m[0].len() {
+        m[i][j] = 0;
+    }
+}
+
+fn nullify_column(m: &mut Vec<Vec<u32>>, j: usize) {
+    for i in 0..m.len() {
+        m[i][j] = 0;
+    }
+}
+
+#[test]
+fn test_zero_matrix() {
+    let mut matrix = vec![vec![1,1,1],vec![1,0,1],vec![1,1,1]];
+    zero_matrix(&mut matrix);
+    assert_eq!(matrix, vec![vec![1,0,1],vec![0,0,0],vec![1,0,1]]);
+
+    let mut matrix = vec![vec![0,1,2,0],vec![3,4,5,2],vec![1,3,1,5]];
+    zero_matrix(&mut matrix);
+    assert_eq!(matrix, vec![vec![0,0,0,0],vec![0,4,5,0],vec![0,3,1,0]]);
+}
