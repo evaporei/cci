@@ -16,8 +16,10 @@ use std::collections::HashSet;
 // that is, s times amount of bytes for a char in UTF-8?
 pub fn is_unique(s: &str) -> bool {
     let mut used_chars = HashSet::new();
-    for ch in s.chars() { // O(s)
-        if !used_chars.contains(&ch) { // worst case O(n)
+    for ch in s.chars() {
+        // O(s)
+        if !used_chars.contains(&ch) {
+            // worst case O(n)
             used_chars.insert(ch); // "O(1)" -> amortized
         } else {
             return false;
@@ -58,7 +60,8 @@ fn test_is_unique() {
 // O(n + log n)
 // or just O(n)?
 pub fn check_permutation(a: &str, b: &str) -> bool {
-    if a.len() != b.len() { // O(1)
+    if a.len() != b.len() {
+        // O(1)
         return false;
     }
 
@@ -78,25 +81,30 @@ use std::collections::HashMap;
 // a = b = n
 // O(n)
 pub fn check_permutation_char_count(a: &str, b: &str) -> bool {
-    if a.len() != b.len() { // O(1)
+    if a.len() != b.len() {
+        // O(1)
         return false;
     }
 
     let mut letters = HashMap::new();
 
-    for ch in a.chars() { // O(a)
-        letters.entry(ch) // O(1) amortized
+    for ch in a.chars() {
+        // O(a)
+        letters
+            .entry(ch) // O(1) amortized
             .and_modify(|count| *count += 1) // O(1) amortized
             .or_insert(1); // O(1) amortized
     }
 
-
-    for ch in b.chars() { // O(b)
-        letters.entry(ch) // O(1) amortized
+    for ch in b.chars() {
+        // O(b)
+        letters
+            .entry(ch) // O(1) amortized
             .and_modify(|count| *count -= 1) // O(1) amortized
             .or_insert(-1); // O(1) amortized
 
-        if *letters.get(&ch).unwrap() < 0 { // O(1) amortized
+        if *letters.get(&ch).unwrap() < 0 {
+            // O(1) amortized
             return false;
         }
     }
@@ -202,10 +210,12 @@ fn test_urlify() {
 pub fn palindrome_perm(s: &str) -> bool {
     let mut table = HashMap::new();
 
-    for ch in s.chars().filter(|ch| ch.is_alphanumeric()).map(|ch| ch.to_ascii_lowercase()) {
-        table.entry(ch)
-            .and_modify(|count| *count += 1)
-            .or_insert(1);
+    for ch in s
+        .chars()
+        .filter(|ch| ch.is_alphanumeric())
+        .map(|ch| ch.to_ascii_lowercase())
+    {
+        table.entry(ch).and_modify(|count| *count += 1).or_insert(1);
     }
 
     let mut found_odd = false;
@@ -227,10 +237,12 @@ pub fn palindrome_perm2(s: &str) -> bool {
     let mut table = HashMap::new();
     let mut odd_count = 0;
 
-    for ch in s.chars().filter(|ch| ch.is_alphanumeric()).map(|ch| ch.to_ascii_lowercase()) {
-        table.entry(ch)
-            .and_modify(|count| *count += 1)
-            .or_insert(1);
+    for ch in s
+        .chars()
+        .filter(|ch| ch.is_alphanumeric())
+        .map(|ch| ch.to_ascii_lowercase())
+    {
+        table.entry(ch).and_modify(|count| *count += 1).or_insert(1);
 
         if table.get(&ch).unwrap() % 2 == 1 {
             odd_count += 1;
@@ -245,7 +257,12 @@ pub fn palindrome_perm2(s: &str) -> bool {
 pub fn palindrome_perm3(s: &str) -> bool {
     let mut bit_vector = 0;
 
-    for index in s.chars().filter(|ch| ch.is_alphanumeric()).map(|ch| ch.to_ascii_lowercase()).map(|ch| ch as u32) {
+    for index in s
+        .chars()
+        .filter(|ch| ch.is_alphanumeric())
+        .map(|ch| ch.to_ascii_lowercase())
+        .map(|ch| ch as u32)
+    {
         if let Some(mask) = 1i32.checked_shl(index) {
             if bit_vector & mask == 0 {
                 bit_vector |= mask;
@@ -325,8 +342,16 @@ pub fn one_away_monolith(first: &str, second: &str) -> bool {
         return false;
     }
 
-    let s1 = if first.len() < second.len() { first } else { second };
-    let s2 = if first.len() < second.len() { second } else { first };
+    let s1 = if first.len() < second.len() {
+        first
+    } else {
+        second
+    };
+    let s2 = if first.len() < second.len() {
+        second
+    } else {
+        first
+    };
 
     let mut idx1 = 0;
     let mut idx2 = 0;
@@ -334,7 +359,9 @@ pub fn one_away_monolith(first: &str, second: &str) -> bool {
 
     while idx2 < s2.len() && idx1 < s1.len() {
         if s1.chars().nth(idx1) != s2.chars().nth(idx2) {
-            if found_diff { return false; }
+            if found_diff {
+                return false;
+            }
             found_diff = true;
 
             if s1.len() == s2.len() {
@@ -433,13 +460,19 @@ pub fn str_compr_bad(s: &str) -> String {
         }
     }
 
-    if out.len() < s.len() { out } else { s.to_owned() }
+    if out.len() < s.len() {
+        out
+    } else {
+        s.to_owned()
+    }
 }
 
 pub fn str_compr_w_count(s: &str) -> String {
     let compr_len = count_compression(s);
 
-    if compr_len >= s.len() { return s.to_owned(); }
+    if compr_len >= s.len() {
+        return s.to_owned();
+    }
 
     let mut out = String::with_capacity(compr_len);
     let mut count_consecutive = 0;
@@ -483,13 +516,13 @@ fn test_str_compr() {
     assert_eq!(str_compression("abccddefg"), "abc2d2efg");
     assert_eq!(str_compression("abcdefg"), "abcdefg");
 
-    let mut s = vec!['a','a','b','b','c','c','c'];
+    let mut s = vec!['a', 'a', 'b', 'b', 'c', 'c', 'c'];
     str_compression_vec(&mut s);
-    assert_eq!(s, vec!['a','2','b','2','c','3']);
+    assert_eq!(s, vec!['a', '2', 'b', '2', 'c', '3']);
 
-    let mut s = vec!['a','a','a'];
+    let mut s = vec!['a', 'a', 'a'];
     str_compression_vec(&mut s);
-    assert_eq!(s, vec!['a','3']);
+    assert_eq!(s, vec!['a', '3']);
 
     assert_eq!(str_compr_bad("aaaaabcccccdeeef"), "a5b1c5d1e3f1");
     assert_eq!(str_compr_bad("aaabbbcccddd"), "a3b3c3d3");
@@ -509,7 +542,7 @@ fn test_str_compr() {
 // 1.7 Rotate Matrix: Given an image represented by an NxN matrix, where each pixel in the image is 4
 // bytes, write a method to rotate the image by 90 degrees. Can you do this in place?
 // Hints: #51, #100
-// 
+//
 // for i = 0 to n:
 //   temp = top[i]
 //   top[i] = left[i]
@@ -546,13 +579,26 @@ pub fn rotate_matrix(m: &mut Vec<Vec<u32>>) {
 
 #[test]
 fn test_rotate_matrix() {
-    let mut matrix = vec![vec![1,2,3],vec![4,5,6],vec![7,8,9]];
+    let mut matrix = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
     rotate_matrix(&mut matrix);
-    assert_eq!(matrix, vec![vec![7,4,1],vec![8,5,2],vec![9,6,3]]);
+    assert_eq!(matrix, vec![vec![7, 4, 1], vec![8, 5, 2], vec![9, 6, 3]]);
 
-    let mut matrix = vec![vec![5,1,9,11],vec![2,4,8,10],vec![13,3,6,7],vec![15,14,12,16]];
+    let mut matrix = vec![
+        vec![5, 1, 9, 11],
+        vec![2, 4, 8, 10],
+        vec![13, 3, 6, 7],
+        vec![15, 14, 12, 16],
+    ];
     rotate_matrix(&mut matrix);
-    assert_eq!(matrix, vec![vec![15,13,2,5],vec![14,3,4,1],vec![12,6,8,9],vec![16,7,10,11]]);
+    assert_eq!(
+        matrix,
+        vec![
+            vec![15, 13, 2, 5],
+            vec![14, 3, 4, 1],
+            vec![12, 6, 8, 9],
+            vec![16, 7, 10, 11]
+        ]
+    );
 }
 
 // 1.8 Zero Matrix: Write an algorithm such that if an element in an MxN matrix is 0, its entire row and
@@ -598,13 +644,16 @@ fn nullify_column(m: &mut Vec<Vec<u32>>, j: usize) {
 
 #[test]
 fn test_zero_matrix() {
-    let mut matrix = vec![vec![1,1,1],vec![1,0,1],vec![1,1,1]];
+    let mut matrix = vec![vec![1, 1, 1], vec![1, 0, 1], vec![1, 1, 1]];
     zero_matrix(&mut matrix);
-    assert_eq!(matrix, vec![vec![1,0,1],vec![0,0,0],vec![1,0,1]]);
+    assert_eq!(matrix, vec![vec![1, 0, 1], vec![0, 0, 0], vec![1, 0, 1]]);
 
-    let mut matrix = vec![vec![0,1,2,0],vec![3,4,5,2],vec![1,3,1,5]];
+    let mut matrix = vec![vec![0, 1, 2, 0], vec![3, 4, 5, 2], vec![1, 3, 1, 5]];
     zero_matrix(&mut matrix);
-    assert_eq!(matrix, vec![vec![0,0,0,0],vec![0,4,5,0],vec![0,3,1,0]]);
+    assert_eq!(
+        matrix,
+        vec![vec![0, 0, 0, 0], vec![0, 4, 5, 0], vec![0, 3, 1, 0]]
+    );
 }
 
 // 1.9 String Rotation: Assume you have a method isSubstring which checks if one word is a substring

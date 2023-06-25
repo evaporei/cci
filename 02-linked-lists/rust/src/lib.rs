@@ -1,15 +1,12 @@
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
     pub val: i32,
-    pub next: Option<Box<ListNode>>
+    pub next: Option<Box<ListNode>>,
 }
 
 impl ListNode {
     pub fn new(val: i32) -> Self {
-        ListNode {
-            next: None,
-            val
-        }
+        ListNode { next: None, val }
     }
 
     pub fn find<F>(&self, f: F) -> Option<&Self>
@@ -167,32 +164,50 @@ fn contains_in_range(val: i32, mut start: &ListNode, end: &ListNode) -> bool {
 fn test_remove_dups() {
     let l1 = vec![1, 1, 2].into_iter().collect();
 
-    assert_eq!(remove_dups_ordered(Some(Box::new(l1))), Some(Box::new(vec![1, 2].into_iter().collect())));
+    assert_eq!(
+        remove_dups_ordered(Some(Box::new(l1))),
+        Some(Box::new(vec![1, 2].into_iter().collect()))
+    );
 
     let l2 = vec![1, 1, 2, 3, 3].into_iter().collect();
 
-    assert_eq!(remove_dups_ordered(Some(Box::new(l2))), Some(Box::new(vec![1, 2, 3].into_iter().collect())));
+    assert_eq!(
+        remove_dups_ordered(Some(Box::new(l2))),
+        Some(Box::new(vec![1, 2, 3].into_iter().collect()))
+    );
 
     // unordered w buf
 
     let l1 = vec![1, 2, 1].into_iter().collect();
 
-    assert_eq!(remove_dups_unordered_w_buf(Some(Box::new(l1))), Some(Box::new(ListNode {
-        val: 1,
-        next: Some(Box::new(ListNode::new(2))),
-    })));
+    assert_eq!(
+        remove_dups_unordered_w_buf(Some(Box::new(l1))),
+        Some(Box::new(ListNode {
+            val: 1,
+            next: Some(Box::new(ListNode::new(2))),
+        }))
+    );
 
     let l2 = vec![3, 2, 3, 1, 2].into_iter().collect();
 
-    assert_eq!(remove_dups_unordered_w_buf(Some(Box::new(l2))), Some(Box::new(vec![3, 2, 1].into_iter().collect())));
+    assert_eq!(
+        remove_dups_unordered_w_buf(Some(Box::new(l2))),
+        Some(Box::new(vec![3, 2, 1].into_iter().collect()))
+    );
 
     // unordered no set
 
     let l1 = vec![1, 2, 1].into_iter().collect();
 
-    assert_eq!(remove_dups_unordered_no_set(Some(Box::new(l1))), Some(Box::new(vec![1, 2].into_iter().collect())));
+    assert_eq!(
+        remove_dups_unordered_no_set(Some(Box::new(l1))),
+        Some(Box::new(vec![1, 2].into_iter().collect()))
+    );
 
     let l2 = vec![3, 2, 3, 1, 2].into_iter().collect();
 
-    assert_eq!(remove_dups_unordered_no_set(Some(Box::new(l2))), Some(Box::new(vec![3, 2, 1].into_iter().collect())));
+    assert_eq!(
+        remove_dups_unordered_no_set(Some(Box::new(l2))),
+        Some(Box::new(vec![3, 2, 1].into_iter().collect()))
+    );
 }
