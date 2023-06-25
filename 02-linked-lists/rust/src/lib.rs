@@ -63,6 +63,43 @@ pub fn remove_dups_unordered_w_buf(head: Option<Box<ListNode>>) -> Option<Box<Li
     }
 }
 
+pub fn remove_dups_unordered_no_set(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+    let head = head?;
+    let mut new_list = ListNode::new(head.val);
+    let mut new_head = &mut new_list;
+    let mut pivot: &Option<Box<_>> = &head.next;
+    let mut previous_pivot: &Option<Box<_>> = &None;
+
+    loop {
+        match pivot {
+            None => break Some(Box::new(new_list)),
+            Some(node) => {
+                if !contains_in_range(node.val, &head, previous_pivot.as_ref().unwrap_or(&head)) {
+                    new_head.next = Some(Box::new(ListNode::new(node.val)));
+                    new_head = &mut *new_list.next.as_mut().unwrap();
+                }
+                previous_pivot = pivot;
+                pivot = &node.next;
+            }
+        }
+    }
+}
+
+fn contains_in_range(val: i32, mut start: &ListNode, end: &ListNode) -> bool {
+    loop {
+        if start.val == val {
+            return true;
+        }
+        if core::ptr::eq(start, end) {
+            return false;
+        }
+        let Some(ref next) = start.next else {
+            return false;
+        };
+        start = &*next;
+    }
+}
+
 #[test]
 fn test_remove_dups() {
     let l1 = Some(Box::new(ListNode {
