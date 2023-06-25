@@ -99,7 +99,10 @@ pub fn dedup_wout_buf_ord(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> 
     dedup_wout_buf_ord_impl(head, None)
 }
 
-fn dedup_wout_buf_ord_impl(head: Option<Box<ListNode>>, last_seen: Option<i32>) -> Option<Box<ListNode>> {
+fn dedup_wout_buf_ord_impl(
+    head: Option<Box<ListNode>>,
+    last_seen: Option<i32>,
+) -> Option<Box<ListNode>> {
     let ListNode { val, next } = *head?;
 
     let should_include = Some(val) != last_seen;
@@ -168,7 +171,10 @@ pub fn dedup_w_set_unord(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
     dedup_w_set_unord_impl(head, &mut set)
 }
 
-fn dedup_w_set_unord_impl(head: Option<Box<ListNode>>, set: &mut HashSet<i32>) -> Option<Box<ListNode>> {
+fn dedup_w_set_unord_impl(
+    head: Option<Box<ListNode>>,
+    set: &mut HashSet<i32>,
+) -> Option<Box<ListNode>> {
     let ListNode { val, next } = *head?;
 
     let has_seen = set.insert(val);
