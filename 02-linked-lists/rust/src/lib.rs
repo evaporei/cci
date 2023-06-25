@@ -35,6 +35,35 @@ impl FromIterator<i32> for ListNode {
     }
 }
 
+impl IntoIterator for ListNode {
+    type IntoIter = ListNodeIterator;
+    type Item = i32;
+
+    fn into_iter(self) -> Self::IntoIter {
+        ListNodeIterator {
+            list: Some(Box::new(self)),
+        }
+    }
+}
+
+pub struct ListNodeIterator {
+    list: Option<Box<ListNode>>,
+}
+
+impl Iterator for ListNodeIterator {
+    type Item = i32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let list = self.list.as_deref_mut()?;
+
+        let next = list.val;
+
+        self.list = self.list.take();
+
+        Some(next)
+    }
+}
+
 // https://leetcode.com/problems/remove-duplicates-from-sorted-list/
 pub fn remove_dups_ordered(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
     let mut curr_opt = head.as_mut();
