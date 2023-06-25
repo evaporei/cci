@@ -13,6 +13,28 @@ impl ListNode {
   }
 }
 
+impl FromIterator<i32> for ListNode {
+    fn from_iter<I>(iter: I) -> Self
+    where
+        I: IntoIterator<Item = i32>,
+    {
+        let mut iter = iter.into_iter();
+
+        let mut head = ListNode::new(iter.next().expect("expected at least one item"));
+
+        let mut tail = &mut head.next;
+
+        while let Some(next) = iter.next() {
+            *tail = Some(Box::new(ListNode::new(next)));
+            if let Some(tail_next) = tail {
+                tail = &mut tail_next.next;
+            }
+        }
+
+        head
+    }
+}
+
 // https://leetcode.com/problems/remove-duplicates-from-sorted-list/
 pub fn remove_dups_ordered(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
     let mut curr_opt = head.as_mut();
@@ -102,34 +124,16 @@ fn contains_in_range(val: i32, mut start: &ListNode, end: &ListNode) -> bool {
 
 #[test]
 fn test_remove_dups() {
-    let l1 = Some(Box::new(ListNode {
-        val: 1,
-        next: Some(Box::new(ListNode {
-            val: 1,
-            next: Some(Box::new(ListNode::new(2))),
-        })),
-    }));
+    let l1 = vec![1, 1, 2].into_iter().collect();
 
-    assert_eq!(remove_dups_ordered(l1), Some(Box::new(ListNode {
+    assert_eq!(remove_dups_ordered(Some(Box::new(l1))), Some(Box::new(ListNode {
         val: 1,
         next: Some(Box::new(ListNode::new(2))),
     })));
 
-    let l2 = Some(Box::new(ListNode {
-        val: 1,
-        next: Some(Box::new(ListNode {
-            val: 1,
-            next: Some(Box::new(ListNode {
-                val: 2,
-                next: Some(Box::new(ListNode {
-                    val: 3,
-                    next: Some(Box::new(ListNode::new(3))),
-                })),
-            })),
-        })),
-    }));
+    let l2 = vec![1, 1, 2, 3, 3].into_iter().collect();
 
-    assert_eq!(remove_dups_ordered(l2), Some(Box::new(ListNode {
+    assert_eq!(remove_dups_ordered(Some(Box::new(l2))), Some(Box::new(ListNode {
         val: 1,
         next: Some(Box::new(ListNode {
             val: 2,
@@ -139,34 +143,16 @@ fn test_remove_dups() {
 
     // unordered w buf
 
-    let l1 = Some(Box::new(ListNode {
-        val: 1,
-        next: Some(Box::new(ListNode {
-            val: 2,
-            next: Some(Box::new(ListNode::new(1))),
-        })),
-    }));
+    let l1 = vec![1, 2, 1].into_iter().collect();
 
-    assert_eq!(remove_dups_unordered_w_buf(l1), Some(Box::new(ListNode {
+    assert_eq!(remove_dups_unordered_w_buf(Some(Box::new(l1))), Some(Box::new(ListNode {
         val: 1,
         next: Some(Box::new(ListNode::new(2))),
     })));
 
-    let l2 = Some(Box::new(ListNode {
-        val: 3,
-        next: Some(Box::new(ListNode {
-            val: 2,
-            next: Some(Box::new(ListNode {
-                val: 3,
-                next: Some(Box::new(ListNode {
-                    val: 1,
-                    next: Some(Box::new(ListNode::new(2))),
-                })),
-            })),
-        })),
-    }));
+    let l2 = vec![3, 2, 3, 1, 2].into_iter().collect();
 
-    assert_eq!(remove_dups_unordered_w_buf(l2), Some(Box::new(ListNode {
+    assert_eq!(remove_dups_unordered_w_buf(Some(Box::new(l2))), Some(Box::new(ListNode {
         val: 3,
         next: Some(Box::new(ListNode {
             val: 2,
