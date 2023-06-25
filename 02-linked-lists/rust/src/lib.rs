@@ -159,4 +159,23 @@ fn test_remove_dups() {
             next: Some(Box::new(ListNode::new(1))),
         })),
     })));
+
+    // unordered no set
+
+    let l1 = vec![1, 2, 1].into_iter().collect();
+
+    assert_eq!(remove_dups_unordered_no_set(Some(Box::new(l1))), Some(Box::new(ListNode {
+        val: 1,
+        next: Some(Box::new(ListNode::new(2))),
+    })));
+
+    let l2 = vec![3, 2, 3, 1, 2].into_iter().collect();
+
+    assert_eq!(remove_dups_unordered_no_set(Some(Box::new(l2))), Some(Box::new(ListNode {
+        val: 3,
+        next: Some(Box::new(ListNode {
+            val: 2,
+            next: Some(Box::new(ListNode::new(1))),
+        })),
+    })));
 }
