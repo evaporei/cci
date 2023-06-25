@@ -11,6 +11,18 @@ impl ListNode {
             val
         }
     }
+
+    pub fn find<F>(&self, f: F) -> Option<&Self>
+    where
+        F: Fn(&Self) -> bool,
+    {
+        if f(self) {
+            Some(self)
+        } else {
+            let next = self.next.as_ref()?;
+            next.find(f)
+        }
+    }
 }
 
 impl FromIterator<i32> for ListNode {
