@@ -95,6 +95,24 @@ pub fn remove_dups_ordered(mut head: Option<Box<ListNode>>) -> Option<Box<ListNo
     head
 }
 
+pub fn dedup_wout_buf_ord(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+    dedup_wout_buf_ord_impl(head, None)
+}
+
+fn dedup_wout_buf_ord_impl(head: Option<Box<ListNode>>, last_seen: Option<i32>) -> Option<Box<ListNode>> {
+    let ListNode { val, next } = *head?;
+
+    let should_include = Some(val) != last_seen;
+
+    let next = dedup_wout_buf_ord_impl(next, Some(val));
+
+    if should_include {
+        Some(Box::new(ListNode { val, next }))
+    } else {
+        next
+    }
+}
+
 use std::collections::HashSet;
 
 // 2.1 Remove Dups! Write code to remove duplicates from an unsorted linked list.
@@ -173,6 +191,20 @@ fn test_remove_dups() {
 
     assert_eq!(
         remove_dups_ordered(Some(Box::new(l2))),
+        Some(Box::new(vec![1, 2, 3].into_iter().collect()))
+    );
+
+    let l1 = vec![1, 1, 2].into_iter().collect();
+
+    assert_eq!(
+        dedup_wout_buf_ord(Some(Box::new(l1))),
+        Some(Box::new(vec![1, 2].into_iter().collect()))
+    );
+
+    let l2 = vec![1, 1, 2, 3, 3].into_iter().collect();
+
+    assert_eq!(
+        dedup_wout_buf_ord(Some(Box::new(l2))),
         Some(Box::new(vec![1, 2, 3].into_iter().collect()))
     );
 
