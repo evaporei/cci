@@ -163,6 +163,25 @@ pub fn remove_dups_unordered_no_set(head: Option<Box<ListNode>>) -> Option<Box<L
     }
 }
 
+pub fn dedup_w_set_unord(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+    let mut set = HashSet::new();
+    dedup_w_set_unord_impl(head, &mut set)
+}
+
+fn dedup_w_set_unord_impl(head: Option<Box<ListNode>>, set: &mut HashSet<i32>) -> Option<Box<ListNode>> {
+    let ListNode { val, next } = *head?;
+
+    let has_seen = set.insert(val);
+
+    let next = dedup_w_set_unord_impl(next, set);
+
+    if has_seen {
+        Some(Box::new(ListNode { val, next }))
+    } else {
+        next
+    }
+}
+
 fn contains_in_range(val: i32, mut start: &ListNode, end: &ListNode) -> bool {
     loop {
         if start.val == val {
@@ -224,6 +243,23 @@ fn test_remove_dups() {
 
     assert_eq!(
         remove_dups_unordered_w_buf(Some(Box::new(l2))),
+        Some(Box::new(vec![3, 2, 1].into_iter().collect()))
+    );
+
+    let l1 = vec![1, 2, 1].into_iter().collect();
+
+    assert_eq!(
+        dedup_w_set_unord(Some(Box::new(l1))),
+        Some(Box::new(ListNode {
+            val: 1,
+            next: Some(Box::new(ListNode::new(2))),
+        }))
+    );
+
+    let l2 = vec![3, 2, 3, 1, 2].into_iter().collect();
+
+    assert_eq!(
+        dedup_w_set_unord(Some(Box::new(l2))),
         Some(Box::new(vec![3, 2, 1].into_iter().collect()))
     );
 
