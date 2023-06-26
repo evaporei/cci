@@ -39,3 +39,26 @@ fn test_bubble_sort() {
     bubble_sort2(&mut v);
     assert_eq!(v, vec![3, 4, 6, 7]);
 }
+
+pub fn selection_sort<T: Ord>(l: &mut [T]) {
+    for j in 0..l.len() {
+        let mut smallest = j;
+
+        for i in j + 1..l.len() {
+            if l[i] < l[smallest] {
+                smallest = i;
+            }
+        }
+
+        if smallest != j {
+            l.swap(smallest, j);
+        }
+    }
+}
+
+#[test]
+fn test_selection_sort() {
+    let mut v = vec![7, 6, 4, 3];
+    selection_sort(&mut v);
+    assert_eq!(v, vec![3, 4, 6, 7]);
+}
