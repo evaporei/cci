@@ -62,3 +62,20 @@ fn test_selection_sort() {
     selection_sort(&mut v);
     assert_eq!(v, vec![3, 4, 6, 7]);
 }
+
+pub fn insertion_sort<T: Ord>(l: &mut [T]) {
+    for i in 1..l.len() {
+        let mut j = i;
+        while j > 0 && l[j] < l[j - 1] {
+            l.swap(j, j - 1);
+            j -= 1;
+        }
+    }
+}
+
+#[test]
+fn test_insertion_sort() {
+    let mut v = vec![7, 6, 4, 3];
+    insertion_sort(&mut v);
+    assert_eq!(v, vec![3, 4, 6, 7]);
+}
