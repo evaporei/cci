@@ -65,7 +65,7 @@ var deleteDupsUnordered = function(head) {
   return head;
 };
 
-(function testDelDupOrd() {
+(function testDelDupUnord() {
   const l1 = new ListNode(2, new ListNode(1, new ListNode(2)));
   assert.deepStrictEqual(
     deleteDupsUnordered(l1),
