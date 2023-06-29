@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
     pub val: i32,
@@ -18,6 +20,24 @@ impl ListNode {
         } else {
             let next = self.next.as_ref()?;
             next.find(f)
+        }
+    }
+
+    pub fn insertion_sort(mut self, mut other: Self) -> Self {
+        match other.val.cmp(&self.val) {
+            Ordering::Greater => {
+                other.next = Some(Box::new(self));
+                other
+            }
+            Ordering::Equal => self,
+            Ordering::Less => {
+                let next = match self.next.take() {
+                    Some(next) => next.insertion_sort(other),
+                    None => other,
+                };
+                self.next = Some(Box::new(next));
+                self
+            }
         }
     }
 }
@@ -203,6 +223,18 @@ fn contains_in_range(val: i32, mut start: &ListNode, end: &ListNode) -> bool {
     }
 }
 
+pub fn dedup_unordered_wout_buf_insertion_sort(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+    let mut head = *head?;
+    let next = head.next.take();
+
+    let next = dedup_unordered_wout_buf_insertion_sort(next);
+    let Some(next) = next else { return Some(Box::new(head)) };
+
+    let merged = next.insertion_sort(head);
+
+    Some(Box::new(merged))
+}
+
 #[test]
 fn test_remove_dups() {
     let l1 = vec![1, 1, 2].into_iter().collect();
@@ -282,6 +314,22 @@ fn test_remove_dups() {
 
     assert_eq!(
         remove_dups_unordered_no_set(Some(Box::new(l2))),
+        Some(Box::new(vec![3, 2, 1].into_iter().collect()))
+    );
+
+    // moar
+
+    // let l1 = vec![1, 2, 1].into_iter().collect();
+    //
+    // assert_eq!(
+    //     dedup_unordered_wout_buf_insertion_sort(Some(Box::new(l1))),
+    //     Some(Box::new(vec![1, 2].into_iter().collect())) // results in [2, 1]
+    // );
+
+    let l2 = vec![3, 2, 3, 1, 2].into_iter().collect();
+
+    assert_eq!(
+        dedup_unordered_wout_buf_insertion_sort(Some(Box::new(l2))),
         Some(Box::new(vec![3, 2, 1].into_iter().collect()))
     );
 }
