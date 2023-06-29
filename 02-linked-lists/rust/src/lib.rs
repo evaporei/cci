@@ -235,6 +235,23 @@ pub fn dedup_unordered_wout_buf_insertion_sort(head: Option<Box<ListNode>>) -> O
     Some(Box::new(merged))
 }
 
+pub fn dedup_unordered_wout_buf_linear_scan(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+    let mut head = *head?;
+    let next = head.next.take();
+
+    let next = dedup_unordered_wout_buf_linear_scan(next);
+    let Some(next) = next else { return Some(Box::new(head)) };
+
+    let is_duplicated = next.find(|haystack| head.val == haystack.val).is_some();
+
+    if is_duplicated {
+        Some(next)
+    } else {
+        head.next = Some(next);
+        Some(Box::new(head))
+    }
+}
+
 #[test]
 fn test_remove_dups() {
     let l1 = vec![1, 1, 2].into_iter().collect();
@@ -330,6 +347,20 @@ fn test_remove_dups() {
 
     assert_eq!(
         dedup_unordered_wout_buf_insertion_sort(Some(Box::new(l2))),
+        Some(Box::new(vec![3, 2, 1].into_iter().collect()))
+    );
+
+    // let l1 = vec![1, 2, 1].into_iter().collect();
+    //
+    // assert_eq!(
+    //     dedup_unordered_wout_buf_linear_scan(Some(Box::new(l1))),
+    //     Some(Box::new(vec![1, 2].into_iter().collect())) // results in [2, 1]
+    // );
+
+    let l2 = vec![3, 2, 3, 1, 2].into_iter().collect();
+
+    assert_eq!(
+        dedup_unordered_wout_buf_linear_scan(Some(Box::new(l2))),
         Some(Box::new(vec![3, 2, 1].into_iter().collect()))
     );
 }
