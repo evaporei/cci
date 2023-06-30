@@ -145,3 +145,32 @@ var kthToLast = function(head, k) {
     new ListNode(3, new ListNode(1, new ListNode(2)))// middle element
   );
 })();
+
+var kthToLastOpt = function(head, k) {
+  let lastPtrs = [];
+
+  let curr = head;
+  while (curr != null) {
+    lastPtrs.push(curr);
+    if (lastPtrs.length > k) {
+      lastPtrs.shift();// pop first
+    }
+    curr = curr.next;
+  }
+
+  return lastPtrs.shift();
+};
+
+(function testKthToLastOpt() {
+  const l1 = new ListNode(2, new ListNode(1, new ListNode(2)));
+  assert.deepStrictEqual(
+    kthToLastOpt(l1, 1),
+    new ListNode(2)// last element
+  );
+
+  const l2 = new ListNode(3, new ListNode(2, new ListNode(3, new ListNode(1, new ListNode(2)))));
+  assert.deepStrictEqual(
+    kthToLastOpt(l2, 3),
+    new ListNode(3, new ListNode(1, new ListNode(2)))// middle element
+  );
+})();
