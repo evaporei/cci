@@ -78,3 +78,35 @@ var deleteDupsUnordered = function(head) {
     new ListNode(3, new ListNode(2, new ListNode(1)))
   );
 })();
+
+// buffer not allowed
+var dedupUnordNoBuf = function(head) {
+  let curr = head;
+  while (curr != null) {
+    let runner = curr;
+    while (runner.next != null) {
+      if (runner.next.val == curr.val) {
+        runner.next = runner.next.next;
+      } else {
+        runner = runner.next;
+      }
+    }
+    curr = curr.next;
+  }
+};
+
+(function testDelDupUnordNoBuf() {
+  const l1 = new ListNode(2, new ListNode(1, new ListNode(2)));
+  dedupUnordNoBuf(l1);
+  assert.deepStrictEqual(
+    l1,
+    new ListNode(2, new ListNode(1))
+  );
+
+  const l2 = new ListNode(3, new ListNode(2, new ListNode(3, new ListNode(1, new ListNode(2)))));
+  dedupUnordNoBuf(l2);
+  assert.deepStrictEqual(
+    l2,
+    new ListNode(3, new ListNode(2, new ListNode(1)))
+  );
+})();
