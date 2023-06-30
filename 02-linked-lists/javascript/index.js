@@ -110,3 +110,38 @@ var dedupUnordNoBuf = function(head) {
     new ListNode(3, new ListNode(2, new ListNode(1)))
   );
 })();
+
+// 2.2 Return Kth to Last: Implement an algorithm to find the kth to last element of a singly linked list.
+// Hints: #8, #25, #41, #67, #126
+var kthToLast = function(head, k) {
+  let len = 0;
+
+  let curr = head;
+  while (curr != null) {
+    len++;
+    curr = curr.next;
+  }
+
+  let diff = len - k;
+  let kth = head;
+  while (diff > 0) {
+    kth = kth.next;
+    diff--;
+  }
+
+  return kth;
+};
+
+(function testKthToLast() {
+  const l1 = new ListNode(2, new ListNode(1, new ListNode(2)));
+  assert.deepStrictEqual(
+    kthToLast(l1, 1),
+    new ListNode(2)// last element
+  );
+
+  const l2 = new ListNode(3, new ListNode(2, new ListNode(3, new ListNode(1, new ListNode(2)))));
+  assert.deepStrictEqual(
+    kthToLast(l2, 3),
+    new ListNode(3, new ListNode(1, new ListNode(2)))// middle element
+  );
+})();
