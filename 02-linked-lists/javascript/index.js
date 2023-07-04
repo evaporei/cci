@@ -174,3 +174,37 @@ var kthToLastOpt = function(head, k) {
     new ListNode(3, new ListNode(1, new ListNode(2)))// middle element
   );
 })();
+
+// this places two pointers K nodes apart
+// by moving p1 K nodes into the list, then
+// walking p2 till the end of p1 (N).
+var kthToLastOpt2 = function(head, k) {
+  let p1 = head;
+  let p2 = head;
+
+  for (let i = 0; i < k; i++) {
+    if (p1 == null) return null;
+    p1 = p1.next;
+  }
+
+  while (p1 != null) {
+    p1 = p1.next;
+    p2 = p2.next;
+  }
+
+  return p2;
+};
+
+(function testKthToLastOpt2() {
+  const l1 = new ListNode(2, new ListNode(1, new ListNode(2)));
+  assert.deepStrictEqual(
+    kthToLastOpt2(l1, 1),
+    new ListNode(2)// last element
+  );
+
+  const l2 = new ListNode(3, new ListNode(2, new ListNode(3, new ListNode(1, new ListNode(2)))));
+  assert.deepStrictEqual(
+    kthToLastOpt2(l2, 3),
+    new ListNode(3, new ListNode(1, new ListNode(2)))// middle element
+  );
+})();
