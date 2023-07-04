@@ -208,3 +208,26 @@ var kthToLastOpt2 = function(head, k) {
     new ListNode(3, new ListNode(1, new ListNode(2)))// middle element
   );
 })();
+
+var deleteNode = function(node) {
+  if (node == null || node.next == null) return;
+
+  node.val = node.next.val;
+  node.next = node.next.next;
+};
+
+(function testDeleteNode() {
+  const l1 = new ListNode(2, new ListNode(1, new ListNode(2)));
+  deleteNode(l1.next);
+  assert.deepStrictEqual(
+    l1,
+    new ListNode(2, new ListNode(2))
+  );
+
+  const l2 = new ListNode(3, new ListNode(2, new ListNode(3, new ListNode(1, new ListNode(2)))));
+  deleteNode(l2.next.next.next)
+  assert.deepStrictEqual(
+    l2,
+    new ListNode(3, new ListNode(2, new ListNode(3, new ListNode(2))))
+  );
+})();
