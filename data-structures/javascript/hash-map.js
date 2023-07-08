@@ -1,5 +1,12 @@
 const assert = require('assert')
 
+class LinkedList {
+  constructor(data) {
+    this.data = data;
+    this.next = null;
+  }
+}
+
 function adler32(text) {
   let s1 = 1;
   let s2 = 0;
@@ -23,13 +30,16 @@ class HashMap {
 
   get(key) {
     let bucket = this.hash(key) % this.buckets.length;
-    let value = this.buckets[bucket];
-    return value;
+    let list = this.buckets[bucket];
+    if (list) {
+      return list.data.value;
+    }
+    return null;
   }
 
   set(key, value) {
     let bucket = this.hash(key) % this.buckets.length;
-    this.buckets[bucket] = value;
+    this.buckets[bucket] = new LinkedList({ key, value });
   }
 
   hash(key) {
