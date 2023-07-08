@@ -17,9 +17,9 @@ pub struct HashMap<V> {
     entries: [Option<V>; BASE_CAP],
 }
 
-impl<V: Copy> HashMap<V> {
+impl<V> HashMap<V> {
     pub fn new() -> Self {
-        Self { entries: [None; BASE_CAP] }
+        Self { entries: std::array::from_fn(|_| None) }
     }
 
     pub fn get(&self, key: &str) -> Option<&V> {
