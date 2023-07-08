@@ -11,10 +11,24 @@ fn adler32(text: &str) -> u32 {
   return (s2 << 16) | s1;
 }
 
+struct LinkedList<T> {
+    data: T,
+    next: Option<Box<LinkedList<T>>>,
+}
+
+impl<T> LinkedList<T> {
+    fn new(data: T) -> Self {
+        Self {
+            data,
+            next: None,
+        }
+    }
+}
+
 const BASE_CAP: usize = 500;
 
 pub struct HashMap<V> {
-    entries: [Option<V>; BASE_CAP],
+    entries: [Option<Box<LinkedList<V>>>; BASE_CAP],
 }
 
 impl<V> HashMap<V> {
@@ -24,12 +38,12 @@ impl<V> HashMap<V> {
 
     pub fn get(&self, key: &str) -> Option<&V> {
         let bucket = adler32(key) as usize % BASE_CAP;
-        self.entries[bucket].as_ref()
+        self.entries[bucket].as_ref().map(|list| &list.data)
     }
 
     pub fn set(&mut self, key: &str, value: V) {
         let bucket = adler32(key) as usize % BASE_CAP;
-        self.entries[bucket] = Some(value);
+        self.entries[bucket] = Some(Box::new(LinkedList::new(value)));
     }
 }
 
