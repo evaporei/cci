@@ -32,14 +32,28 @@ class HashMap {
     let bucket = this.hash(key) % this.buckets.length;
     let list = this.buckets[bucket];
     if (list) {
-      return list.data.value;
+      let node = list;
+      while (node) {
+        if (String(node.data.key) === String(key)) {
+          return node.data.value;
+        }
+        node = node.next;
+      }
     }
     return null;
   }
 
   set(key, value) {
     let bucket = this.hash(key) % this.buckets.length;
-    this.buckets[bucket] = new LinkedList({ key, value });
+    if (this.buckets[bucket]) {
+      let node = this.buckets[bucket];
+      while (node.next) {
+        node = node.next;
+      }
+      node.next = new LinkedList({ key, value });
+    } else {
+      this.buckets[bucket] = new LinkedList({ key, value });
+    }
   }
 
   hash(key) {
