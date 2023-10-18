@@ -11,6 +11,7 @@ fn adler32(text: &str) -> u32 {
   return (s2 << 16) | s1;
 }
 
+#[derive(Debug)]
 struct LinkedList<T> {
     data: T,
     next: Option<Box<LinkedList<T>>>,
@@ -27,23 +28,40 @@ impl<T> LinkedList<T> {
 
 const BASE_CAP: usize = 500;
 
-pub struct HashMap<V> {
-    entries: [Option<Box<LinkedList<V>>>; BASE_CAP],
+#[derive(Debug)]
+pub struct HashMap<'a, V> {
+    entries: [Option<Box<LinkedList<(&'a str, V)>>>; BASE_CAP],
 }
 
-impl<V> HashMap<V> {
+impl<'a, V> HashMap<'a, V> {
     pub fn new() -> Self {
         Self { entries: std::array::from_fn(|_| None) }
     }
 
     pub fn get(&self, key: &str) -> Option<&V> {
         let bucket = adler32(key) as usize % BASE_CAP;
-        self.entries[bucket].as_ref().map(|list| &list.data)
+        let mut list = self.entries[bucket].as_ref();
+        while let Some(node) = list {
+            if node.data.0 == key {
+                return Some(&node.data.1);
+            } else {
+                list = node.next.as_ref();
+            }
+        }
+        None
     }
 
-    pub fn set(&mut self, key: &str, value: V) {
+    pub fn set(&mut self, key: &'a str, value: V) {
         let bucket = adler32(key) as usize % BASE_CAP;
-        self.entries[bucket] = Some(Box::new(LinkedList::new(value)));
+        let mut list = self.entries[bucket].as_mut();
+        if list.is_some() {
+            while let Some(node) = list {
+                list = node.next.as_mut();
+            }
+            list.replace(&mut Box::new(LinkedList::new((key, value))));
+        } else {
+            self.entries[bucket] = Some(Box::new(LinkedList::new((key, value))));
+        }
     }
 }
 
@@ -57,4 +75,6 @@ fn test_map() {
 
     map.set("2", 60);
     assert_eq!(map.get("2"), Some(&60));
+
+    dbg!(map);
 }

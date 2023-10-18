@@ -20,6 +20,21 @@ function adler32(text) {
   return (s2 << 16) | s1;
 }
 
+const dbg = (label, data) => {
+  if (data == null) {
+    data = label;
+    label = null;
+  }
+
+  if (label == null) {
+    console.log(data);
+  } else {
+    console.log(label, data);
+  }
+
+  return data;
+}
+
 const BASE_CAP = 500;
 
 class HashMap {
