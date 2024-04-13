@@ -221,19 +221,11 @@ pub fn palindrome_perm(s: &str) -> bool {
         table.entry(ch).and_modify(|count| *count += 1).or_insert(1);
     }
 
-    let mut found_odd = false;
+    let odd_count = table.values()
+        .filter(|count| *count % 2 == 1)
+        .count();
 
-    // I find this slightly disgusting
-    for count in table.values() {
-        if count % 2 == 1 {
-            if found_odd {
-                return false;
-            }
-            found_odd = true;
-        }
-    }
-
-    found_odd
+    odd_count <= 1
 }
 
 pub fn palindrome_perm2(s: &str) -> bool {
