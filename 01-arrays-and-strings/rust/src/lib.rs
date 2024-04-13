@@ -256,14 +256,11 @@ pub fn palindrome_perm3(s: &str) -> bool {
         .chars()
         .filter(|ch| ch.is_alphanumeric())
         .map(|ch| ch.to_ascii_lowercase())
+        .map(|ch| ch as u8 - b'a')
         .map(|ch| ch as u32)
     {
-        if let Some(mask) = 1i32.checked_shl(index) {
-            if bit_vector & mask == 0 {
-                bit_vector |= mask;
-            } else {
-                bit_vector &= mask;
-            }
+        if let Some(mask) = 1u32.checked_shl(index) {
+            bit_vector ^= mask;
         }
     }
 
@@ -273,8 +270,16 @@ pub fn palindrome_perm3(s: &str) -> bool {
 #[test]
 fn test_palindrome_perm() {
     assert!(palindrome_perm("Tact Coa"));
+    assert!(!palindrome_perm("abcd"));
+    assert!(palindrome_perm("akkak"));
+
     assert!(palindrome_perm2("Tact Coa"));
+    assert!(!palindrome_perm2("abcd"));
+    assert!(palindrome_perm2("akkak"));
+
     assert!(palindrome_perm3("Tact Coa"));
+    assert!(!palindrome_perm3("abcd"));
+    assert!(palindrome_perm3("akkak"));
 }
 
 // 1.5 One Away: There are three types of edits that can be performed on strings: insert a character,
