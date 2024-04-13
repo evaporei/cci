@@ -130,7 +130,7 @@ fn test_check_permutation() {
 // length of the string. (Note: If implementing in Java, please use a character array so that you can
 // perform this operation in place.)
 // EXAMPLE
-// Input: "Mr John Smith ", 13
+// Input: "Mr John Smith", 13
 // Output: "Mr%20John%20Smith"
 // Hints: #53, #118
 //
@@ -152,24 +152,27 @@ pub fn urlify(s: &str) -> String {
 
 pub fn urlify_in_place(s: &mut Vec<u8>, true_len: usize) {
     let mut space_count = 0;
-    for ch in s.iter() {
-        if *ch == b' ' {
+    for i in 0..true_len {
+        if s[i] == b' ' {
             space_count += 1;
         }
     }
 
-    let mut index = true_len + space_count * 2;
-    // // set true end character as \0 in trash languages
-    // s[true_len] = '\0';
+    let new_length = true_len + space_count * 2;
+    if s.len() < new_length {
+        s.resize(new_length, 0);
+    }
+
+    let mut index = new_length as isize - 1;
     let mut i = true_len as isize - 1;
     while i >= 0 {
         if s[i as usize] == b' ' {
-            s[index - 1] = b'0';
-            s[index - 2] = b'2';
-            s[index - 3] = b'%';
+            s[index as usize] = b'0';
+            s[index as usize - 1] = b'2';
+            s[index as usize - 2] = b'%';
             index -= 3;
         } else {
-            s[index - i as usize] = s[i as usize];
+            s[index as usize] = s[i as usize];
             index -= 1;
         }
         i -= 1;
@@ -178,22 +181,22 @@ pub fn urlify_in_place(s: &mut Vec<u8>, true_len: usize) {
 
 #[test]
 fn test_urlify() {
-    assert_eq!(urlify("Mr John Smith "), "Mr%20John%20Smith%20");
+    assert_eq!(urlify("Mr John Smith"), "Mr%20John%20Smith");
     assert_eq!(urlify("MrJohnSmith"), "MrJohnSmith");
 
-    // use std::io::Write;
-    //
-    // let mut w_space: Vec<u8> = Vec::with_capacity(14 + 6);
-    // w_space.write(b"Mr John Smith ").unwrap();
-    // let true_len = w_space.len();
-    // urlify_in_place(&mut w_space, true_len);
-    // assert_eq!(w_space, b"MrJohnSmith");
-    //
-    // let mut wout_space: Vec<u8> = Vec::with_capacity(11);
-    // wout_space.write(b"MrJohnSmith").unwrap();
-    // let true_len = wout_space.len();
-    // urlify_in_place(&mut wout_space, true_len);
-    // assert_eq!(wout_space, b"MrJohnSmith");
+    let mut w_space: Vec<u8> = vec![0; 17];
+    w_space[..13].copy_from_slice(b"Mr John Smith");
+
+    let true_len = "Mr John Smith".len();
+    urlify_in_place(&mut w_space, true_len);
+    assert_eq!(w_space, b"Mr%20John%20Smith");
+
+    let mut wout_space: Vec<u8> = vec![0; 11];
+    wout_space[..11].copy_from_slice(b"MrJohnSmith");
+
+    let true_len = "MrJohnSmith".len();
+    urlify_in_place(&mut wout_space, true_len);
+    assert_eq!(wout_space, b"MrJohnSmith");
 }
 
 // 1.4 Palindrome Permutation: Given a string, write a function to check if it is a permutation of a palindrome.
