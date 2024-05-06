@@ -38,6 +38,18 @@ def neet(m: list[list[int]]):
         right -= 1
 
 
+def trans_reverse(m: list[list[int]]):
+    # transpose
+    for i in range(len(m)):
+        for j in range(i, len(m)):
+            tmp = m[i][j]
+            m[i][j] = m[j][i]
+            m[j][i] = tmp
+
+    # reverse
+    for row in m:
+        row.reverse()
+
 
 # 1 2 3      7 4 1
 # 4 5 6  ->  8 5 2
@@ -48,4 +60,8 @@ assert matrix == [[7, 4, 1], [8, 5, 2], [9, 6, 3]]
 
 matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
 neet(matrix)
+assert matrix == [[7, 4, 1], [8, 5, 2], [9, 6, 3]]
+
+matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+trans_reverse(matrix)
 assert matrix == [[7, 4, 1], [8, 5, 2], [9, 6, 3]]
