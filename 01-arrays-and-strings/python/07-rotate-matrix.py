@@ -17,7 +17,7 @@ def rotate(m: list[list[int]]):
 
 
 def neet(m: list[list[int]]):
-    left, right = 0, len(matrix) - 1
+    left, right = 0, len(m) - 1
 
     while left < right:
         for i in range(right - left):
