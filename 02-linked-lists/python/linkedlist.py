@@ -20,14 +20,9 @@ class LinkedList[T]:
         curr = self.head
         out = []
 
-        if curr is None:
-            return out
-
-        out.append(curr.value)
-
-        while curr.next is not None:
-            curr = curr.next
+        while curr is not None:
             out.append(curr.value)
+            curr = curr.next
 
         return out
 
